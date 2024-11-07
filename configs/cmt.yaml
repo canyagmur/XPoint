@@ -1,7 +1,7 @@
 dataset:
     type: 'ImagePairDataset'
-    filename: data/training.hdf5
-    keypoints_filename: tmp/RIFT2/rift2.hdf5
+    filename: /home/wasproject/Desktop/Can/DATASETS/hdf5_DATASETS/dataset_files/MULTIPOINT/training.hdf5 #data/training.hdf5
+    keypoints_filename: /home/wasproject/Desktop/Can/DATASETS/hdf5_DATASETS/keypoint_files/RIFT2/rift2.hdf5 #tmp/RIFT2/rift2.hdf5
     single_image: false #LOOK
     random_pairs: false #LOOK
     height: &height 256 # LOOK
@@ -104,11 +104,11 @@ training:
         step_size: 2
         gamma: 0.89
     weight_decay: 0 #5e-4
-    batchsize: 40 # 16
+    batchsize: 16 # 16
     num_worker: 8 #4 before but 0 is good practice for ddp
     allow_gpu: true
     use_writer: true
-    output_directory: model_weights/PRETRAINED_vmamba-tiny-segmentation-2222-desc256-hmhead-rift2-windowed-256-SOFTLOSS-WEIGHTED-TH  #'model_weights/swinv2-tiny-w16-256 LOOK
+    output_directory: model_weights/XPoint-EXP1  #'model_weights/swinv2-tiny-w16-256 LOOK
     save_every_n_epoch: 20
     validation:
         compute_validation_loss: false

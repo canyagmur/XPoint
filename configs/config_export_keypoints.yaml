@@ -1,6 +1,6 @@
 dataset:
     type: 'ImagePairDataset'
-    filename: data/training.hdf5
+    filename: /home/wasproject/Desktop/Can/DATASETS/hdf5_DATASETS/dataset_files/MULTIPOINT/training.hdf5 #data/training.hdf5
     #foldername: /home/wasproject/Desktop/Can/DATASETS/RedFeat/VIS_SAR/train/
     single_image: False
     augmentation:

@@ -1,6 +1,6 @@
 dataset:
     type: 'ImagePairDataset'
-    filename: D:\Research Related\HasanHoca\XPoint-Research\data\test_512x512.hdf5
+    filename: /home/wasproject/Desktop/Can/DATASETS/hdf5_DATASETS/dataset_files/MULTIPOINT/test.hdf5
     #foldername: data/location
     keypoints_filename: #tmp/labels.hdf5
     single_image: false

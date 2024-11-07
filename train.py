@@ -12,7 +12,6 @@ import xpoint.models as models
 import xpoint.utils as utils
 import xpoint.utils.losses as losses
 
-from pick_GPU import pickGPU
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 

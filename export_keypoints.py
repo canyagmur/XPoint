@@ -98,8 +98,8 @@ def main():
     n=5
     random_indices_n = [5632] #[6799, 4711,  726, 5632, 7378] #torch.randperm(len(dataset))[:n]
     print(random_indices_n)
-    subset_dataset = torch.utils.data.Subset(dataset, random_indices_n)
-    loader_dataset = torch.utils.data.DataLoader(subset_dataset, batch_size=config['prediction']['batchsize'],
+    #subset_dataset = torch.utils.data.Subset(dataset, random_indices_n)
+    loader_dataset = torch.utils.data.DataLoader(dataset, batch_size=config['prediction']['batchsize'],
                                                  shuffle=False, num_workers=config['prediction']['num_worker'])
 
     config["model"]["takes_pair"] = False
@@ -312,81 +312,81 @@ def main():
                                 backup_output_files.pop(0)
 
 
-            import matplotlib.pyplot as plt
-            import numpy as np
-            import cv2
+            # import matplotlib.pyplot as plt
+            # import numpy as np
+            # import cv2
 
-            # Prepare optical and thermal images
-            myopt = np.uint8(batch["optical"]["image"][0][0].cpu().numpy() * 255)
-            myth = np.uint8(batch["thermal"]["image"][0][0].cpu().numpy() * 255)
+            # # Prepare optical and thermal images
+            # myopt = np.uint8(batch["optical"]["image"][0][0].cpu().numpy() * 255)
+            # myth = np.uint8(batch["thermal"]["image"][0][0].cpu().numpy() * 255)
 
-            if config["prediction"]["homographic_adaptation"]['aggregation'] != 'window':
-                pred_o = pred
-                pred_t = pred
-            # Create keypoints for optical image
-            predictions_o = [cv2.KeyPoint(c[1], c[0], 5) for c in pred_o.cpu().numpy().astype(np.float32)]
-            myopt = cv2.drawKeypoints(
-                myopt, 
-                predictions_o, 
-                outImage=np.array([]), 
-                color=(255, 0, 0), 
-                flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
-            )
+            # if config["prediction"]["homographic_adaptation"]['aggregation'] != 'window':
+            #     pred_o = pred
+            #     pred_t = pred
+            # # Create keypoints for optical image
+            # predictions_o = [cv2.KeyPoint(c[1], c[0], 5) for c in pred_o.cpu().numpy().astype(np.float32)]
+            # myopt = cv2.drawKeypoints(
+            #     myopt, 
+            #     predictions_o, 
+            #     outImage=np.array([]), 
+            #     color=(255, 0, 0), 
+            #     flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
+            # )
 
-            # Create keypoints for thermal image
-            predictions_t = [cv2.KeyPoint(c[1], c[0], 5) for c in pred_t.cpu().numpy().astype(np.float32)]
-            myth = cv2.drawKeypoints(
-                myth, 
-                predictions_t, 
-                outImage=np.array([]), 
-                color=(255, 0, 0), 
-                flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
-            )
+            # # Create keypoints for thermal image
+            # predictions_t = [cv2.KeyPoint(c[1], c[0], 5) for c in pred_t.cpu().numpy().astype(np.float32)]
+            # myth = cv2.drawKeypoints(
+            #     myth, 
+            #     predictions_t, 
+            #     outImage=np.array([]), 
+            #     color=(255, 0, 0), 
+            #     flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
+            # )
 
-            # Plot images side by side with matplotlib
-            fig, axes = plt.subplots(1, 2, figsize=(10, 5))
+            # # Plot images side by side with matplotlib
+            # fig, axes = plt.subplots(1, 2, figsize=(10, 5))
 
-            # Display optical image with matches count
-            axes[0].imshow(myopt, cmap='gray')
-            axes[0].axis('off')
-            axes[0].text(
-                10, 10, f"#Keypoints: {len(predictions_o)}", 
-                color='white', fontsize=12, ha='left', va='top', 
-                bbox=dict(boxstyle="round,pad=0.3", edgecolor='white', facecolor='black', alpha=0.7)
-            )
+            # # Display optical image with matches count
+            # axes[0].imshow(myopt, cmap='gray')
+            # axes[0].axis('off')
+            # axes[0].text(
+            #     10, 10, f"#Keypoints: {len(predictions_o)}", 
+            #     color='white', fontsize=12, ha='left', va='top', 
+            #     bbox=dict(boxstyle="round,pad=0.3", edgecolor='white', facecolor='black', alpha=0.7)
+            # )
 
-            # Display thermal image with matches count
-            axes[1].imshow(myth, cmap='gray')
-            axes[1].axis('off')
-            axes[1].text(
-                10, 10, f"#Keypoints: {len(predictions_t)}", 
-                color='white', fontsize=12, ha='left', va='top', 
-                bbox=dict(boxstyle="round,pad=0.3", edgecolor='white', facecolor='black', alpha=0.7)
-            )
+            # # Display thermal image with matches count
+            # axes[1].imshow(myth, cmap='gray')
+            # axes[1].axis('off')
+            # axes[1].text(
+            #     10, 10, f"#Keypoints: {len(predictions_t)}", 
+            #     color='white', fontsize=12, ha='left', va='top', 
+            #     bbox=dict(boxstyle="round,pad=0.3", edgecolor='white', facecolor='black', alpha=0.7)
+            # )
 
-            # Adjust layout
-            plt.tight_layout()
+            # # Adjust layout
+            # plt.tight_layout()
 
-            # Save the figure
-            #take path of args.output_file
-            name_extension = ""
-            if config["prediction"]["homographic_adaptation"]['aggregation'] == 'window':
-                if config["prediction"]["homographic_adaptation"]['weighted_window'] == True:
-                    name_extension = "weighted_window_{}".format(config["prediction"]["homographic_adaptation"]['window_size'])
-                else:
-                    name_extension = "nonweighted_window_{}".format(config["prediction"]["homographic_adaptation"]['window_size'])
-            elif config["prediction"]["homographic_adaptation"]['aggregation'] == 'prod':
-                name_extension = "prod"
-                if config["prediction"]["homographic_adaptation"]['filter_size'] > 0:
-                    name_extension = "prod_gaussian{}".format(config["prediction"]["homographic_adaptation"]['filter_size'])
+            # # Save the figure
+            # #take path of args.output_file
+            # name_extension = ""
+            # if config["prediction"]["homographic_adaptation"]['aggregation'] == 'window':
+            #     if config["prediction"]["homographic_adaptation"]['weighted_window'] == True:
+            #         name_extension = "weighted_window_{}".format(config["prediction"]["homographic_adaptation"]['window_size'])
+            #     else:
+            #         name_extension = "nonweighted_window_{}".format(config["prediction"]["homographic_adaptation"]['window_size'])
+            # elif config["prediction"]["homographic_adaptation"]['aggregation'] == 'prod':
+            #     name_extension = "prod"
+            #     if config["prediction"]["homographic_adaptation"]['filter_size'] > 0:
+            #         name_extension = "prod_gaussian{}".format(config["prediction"]["homographic_adaptation"]['filter_size'])
                 
-            path = os.path.dirname(args.output_file)
-            method_name = args.model_dir.split("/")[-1] + "_"+ name_extension
-            folder_tosave  = os.path.join(path,method_name)
-            if not os.path.exists(folder_tosave):
-                os.makedirs(folder_tosave)
-            filtosave = os.path.join( folder_tosave,f"keypoint_comparison_{epoch_counter}.png")
-            plt.savefig(filtosave, dpi=102, bbox_inches='tight')
+            # path = os.path.dirname(args.output_file)
+            # method_name = args.model_dir.split("/")[-1] + "_"+ name_extension
+            # folder_tosave  = os.path.join(path,method_name)
+            # if not os.path.exists(folder_tosave):
+            #     os.makedirs(folder_tosave)
+            # filtosave = os.path.join( folder_tosave,f"keypoint_comparison_{epoch_counter}.png")
+            # plt.savefig(filtosave, dpi=102, bbox_inches='tight')
 
             # Display the plot
             #plt.show()
