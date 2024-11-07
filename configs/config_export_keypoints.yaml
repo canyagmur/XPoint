@@ -1,0 +1,39 @@
+dataset:
+    type: 'ImagePairDataset'
+    filename: data/training.hdf5
+    #foldername: /home/wasproject/Desktop/Can/DATASETS/RedFeat/VIS_SAR/train/
+    single_image: False
+    augmentation:
+        photometric:
+            enable: false
+        homographic:
+            enable: false
+
+prediction:
+    allow_gpu: true
+    num_worker: 4
+    batchsize: 1
+    detection_threshold: 0.015 #0.015 #0.015 
+    nms: 8
+    cpu_nms: true
+    topk: 0 #
+    homographic_adaptation:
+        num: 10
+        aggregation: 'window' #'window' #'window' #
+        weighted_window: True #
+        window_size: 5
+        erosion_radius: 3
+        mask_border: true
+        min_count: 5
+        filter_size: 0
+        homographies:
+            translation: true
+            rotation: true
+            scaling: true
+            perspective: true
+            scaling_amplitude: 0.2
+            perspective_amplitude_x: 0.2
+            perspective_amplitude_y: 0.2
+            patch_ratio: 0.85
+            max_angle: 1.57  # 3.14
+            allow_artifacts: true
