@@ -24,7 +24,6 @@ share/python-wheels/
 MANIFEST
 model_weights/ALL_BESTS*
 xpoint/models/VMamba
-xpoint/models/RIFT2
 outputs
 tmp
 
