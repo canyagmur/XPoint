@@ -1,6 +1,6 @@
 
 <p align="center">
-  <h1 align="center"><ins>XPoint</ins> <br>A Self-Supervised Visual-State-Space based Architecture for Multimodal Image Registration</h1>
+  <h1 align="center"><ins>XPoint</ins> <br>A Self-Supervised Visual-State-Space based Architecture for Multispectral Image Registration</h1>
   <p align="center">
      | <a href="https://www.linkedin.com/in/icanyagmur/">İsmail Can Yağmur</a> | <br>
      | Hasan F. Ateş | <br>
@@ -22,7 +22,7 @@
 ##
 
 # XPoint
-This is a PyTorch implementation of "XPoint: A Self-Supervised Visual-State-Space based Architecture for Multimodal Image Registration"
+This is a PyTorch implementation of "XPoint: A Self-Supervised Visual-State-Space based Architecture for Multispectral Image Registration"
 
 ## Installation
 This software requires Python 3.8 or higher (Tested on 3.11.0).
