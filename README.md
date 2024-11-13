@@ -52,9 +52,10 @@ A different target directory can be specified with the `-d` flag.
 You can force overwrite existing files by setting the -f flag. Please note that the dataset files are quite large (over 36 GB total), so the download process may take some time.
 
 ### VEDAI Dataset
-The VEDAI dataset can be downloaded from the [official website](https://downloads.greyc.fr/vedai/). The dataset is used for the evaluation of the XPoint on the VEDAI dataset.
+The VEDAI dataset can be downloaded from the [official website](https://downloads.greyc.fr/vedai/).
 
 ### VIS-NIR, VIS-IR and VIS-SAR Datasets
+These datasets are proposed by [RedFeaT](https://github.com/ACuOoOoO/ReDFeat). We uploaded datasets to the [drive link](https://drive.google.com/drive/folders/1M0XXW1CwirXXtgFJDc7day3YWQi-X2Ot?usp=sharing). You can download the "nir_ir_sar_datasets.zip" file from the drive link.
 
 ## Dataset Structure
 The dataset is expected to be structured as one of the following examples:
@@ -91,7 +92,8 @@ data
 │           ├── 0002.png
 │           └── ...
 ```
-As it can be seen, the dataset is expected to be structured in a way that the training and test data are separated into different directories. The optical and thermal images are expected to be in separate directories. The image pairs are expected to have the same name in the optical and thermal directories.
+As it can be seen, the dataset is expected to be structured in a way that the training and test data are separated into different directories. The optical and thermal images are expected to be in separate directories. The image pairs are expected to have the same name in the optical and thermal directories. You can follow the same 
+structure for other datasets, such as VEDAI, VIS-NIR, VIS-IR, and VIS-SAR.
 
 
 
