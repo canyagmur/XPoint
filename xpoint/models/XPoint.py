@@ -6,17 +6,8 @@ import torch.nn.functional as F
 import xpoint.utils as utils
 from xpoint.models.SwinTransformerV2 import SwinTransformerV2
 from xpoint.models.RegNet import RegNet
+import contextlib
 
-
-# from multipoint.models.vmamba import build_vssm_model
-# from multipoint.models.vmamba.MYCONFIG import get_configmultipoint
-
-
-# try:
-#     from xpoint.models.VMamba.classification.models import build_vssm_model
-#     from xpoint.models.VMamba.classification.models.MYCONFIG import get_config
-# except:
-#     print("VMamba not found")
 
 VMAMBA_IMPORT_FLAG = False
 
@@ -26,17 +17,13 @@ try:
     VMAMBA_IMPORT_FLAG = True
 except ImportError as e:
     VMAMBA_IMPORT_FLAG = False
-    print("Error: VMamba module could not be imported. Please ensure all necessary packages are installed. (https://github.com/MzeroMiko/VMamba)")
-    print(f"Detailed error message: {e}")
-
-from xpoint.models.vmamba_src.VMamba import build_vssm_model
-from xpoint.models.vmamba_src.MYCONFIG import get_config
+    vmamba_error_message = f"Detailed error message: {e}"
 
 
 
 
 
-import contextlib
+
 
 class XPoint(nn.Module):
     default_config = {
@@ -443,7 +430,7 @@ class XPoint(nn.Module):
                     self.n_channels[4] = embed_dim*2 #96*2 since there are only 2 elements in dephts
                     self.encoder_downsample_ratio = 8
             elif self.config["use_attention"]["type"] =="VMamba":
-                assert VMAMBA_IMPORT_FLAG, "VMamba not found, please install necessary packages"
+                assert VMAMBA_IMPORT_FLAG, f"VMamba not found, please install necessary packages (https://github.com/MzeroMiko/VMamba)\n {vmamba_error_message}"
                 if self.config['use_attention']['pretrained']['check']:
                     mamba_config = get_config(self.config['use_attention']['pretrained']["yaml_file"],self.config["use_attention"]["model_parameters"])
                     self.n_channels[4] = mamba_config.MODEL.VSSM.EMBED_DIM // 2
@@ -452,7 +439,7 @@ class XPoint(nn.Module):
                     print("Depths : ",mamba_config.MODEL.VSSM.DEPTHS)
                     print("Using pretrained VMAMBA config : ", self.config['use_attention']['pretrained']["yaml_file"])
                 else:
-                    mypath = "/home/wasproject/Desktop/Can/XPoint/model_weights/encoder-pretrained/vmamba-imagenet/vssm_tiny_segmentation_special/vssm_tiny.yaml" 
+                    mypath = "model_weights/encoder-pretrained/vmamba-imagenet/vssm_tiny_segmentation_special/vssm_tiny.yaml" 
                     mamba_config = get_config(mypath)
                     self.n_channels[4] = mamba_config.MODEL.VSSM.EMBED_DIM // 2
                     encoder = build_vssm_model(mamba_config)

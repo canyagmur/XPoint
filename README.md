@@ -8,8 +8,7 @@
 
   </p>
   <h2 align="center">
-    <!-- <p>ECCV 2024</p>
-    TODO: Add paper link -->
+    https://arxiv.org/abs/2411.07430
   </h2>
   
 </p>
@@ -27,12 +26,29 @@ This is a PyTorch implementation of "XPoint: A Self-Supervised Visual-State-Spac
 ## Installation
 This software requires Python 3.8 or higher (Tested on 3.11.0).
 
-Requirements can be installed with:
+First create a conda/virtual environment and activate it:
+```
+conda create -n xpoint python=3.11
+conda activate xpoint
+```
+
+Then install the PyTorch dependencies:
+```
+conda install pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvidia
+```
+
+After that other requirements can be installed with:
 ```
 pip install -r requirements.txt
 ```
 
-The repository includes pre-trained models for XPoint. However, to train the models, you need to download the dataset separately (see [Dataset](#dataset)).
+If you want to use VMamba pretrained encoder, you can install the VMamba binaries using:
+```
+cd xpoint/models/vmamba_src/kernels/selective_scan && pip install .
+```
+
+
+The repository includes [pre-trained models for XPoint](https://drive.google.com/drive/u/1/folders/1M0XXW1CwirXXtgFJDc7day3YWQi-X2Ot). However, to train the models, you need to download the dataset separately (see [Dataset](#dataset)).
 
 <!-- The "csregnet" python package can be locally installed by executing:
 ```
@@ -171,13 +187,31 @@ python train.py -y configs/cmt.yaml
 
 The hyperparameter for the training, e.g. learning rate, model parameters, can be modified in the yaml file.
 
+If you want to use pretrained encoder weights, e.g VMamba, SwinTransformerV2, you can set the `pretrained` parameter in the yaml file. The pretrained weights and their configurations can be downloaded from the [drive link](https://drive.google.com/drive/folders/1M0XXW1CwirXXtgFJDc7day3YWQi-X2Ot?usp=sharing). 
+
 
 ## Citing
-If you use this code in your research, please consider citing the following paper:
+If you use this code in your research, please consider citing the following:
 ```
-TODO: Add citation
+@misc{yagmur2024xpointselfsupervisedvisualstatespacebased,
+      title={XPoint: A Self-Supervised Visual-State-Space based Architecture for Multispectral Image Registration}, 
+      author={Ismail Can Yagmur and Hasan F. Ates and Bahadir K. Gunturk},
+      year={2024},
+      eprint={2411.07430},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2411.07430}, 
+}
 ```
 
 
-## Credits
-TODO Add credits
+### Credits
+
+The main coding framework is built on top of the excellent work provided by [Multipoint](https://github.com/ethz-asl/multipoint). The **RIFT2** implementation was adapted from its [original MATLAB implementation](https://github.com/LJY-RS/RIFT2-multimodal-matching-rotation) into Python. 
+
+For the pretrained encoder, we utilized the robust implementations and pretrained weights from:
+- [SwinTransformerV2](https://github.com/microsoft/Swin-Transformer)  
+- [VMamba](https://github.com/MzeroMiko/VMamba/tree/main)  
+
+We express our gratitude to all the authors of these projects for their significant contributions and for making their work publicly available, which has greatly facilitated the development of this project.
+

@@ -23,6 +23,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 model_weights/ALL_BESTS*
+model_weights/pretrained-encoder-weights
 xpoint/models/VMamba
 outputs
 tmp

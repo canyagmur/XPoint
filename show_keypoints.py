@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 import torch
+import sys
 from tqdm import tqdm
 import os
 
@@ -37,29 +38,12 @@ config_imagepair = {
     }
 }
 
-config_satgeo = {
-    "type": 'SatThermalGeoDataset',
-    "filename" : "/home/wasproject/Desktop/Can/DATASETS/sat-thermal-geo/thermal_h5_datasets/test_database.h5 ",
-    "filename_thermal": "/home/wasproject/Desktop/Can/DATASETS/sat-thermal-geo/thermal_h5_datasets/test_queries.h5",
-    'height': -1,
-    'width': -1,
-    'raw_thermal': False,
-    'single_image': False,
-    'augmentation': {
-        'photometric': {
-            'enable': False,
-        },
-        'homographic': {
-            'enable': False,
-        },
-    }
-}
 
-dataset = data.ImagePairDataset(config_imagepair) #dataset = data.SatThermalGeoDataset(config_satgeo)
+dataset = data.ImagePairDataset(config_imagepair)
 try:
     keypoint_file = h5py.File(args.keypoint_file, 'r', swmr=True)
 except IOError as e:
-    print('I/O error({0}): {1}: {2}'.format(e.errno, e.strerror, filename))
+    print('I/O error({0}): {1}: {2}'.format(e.errno, e.strerror, args.keypoint_file))
     sys.exit()
 
 # display an individual sample

@@ -1,14 +1,14 @@
 dataset:
     type: 'ImagePairDataset'
-    filename: /home/wasproject/Desktop/Can/DATASETS/hdf5_DATASETS/dataset_files/MULTIPOINT/training.hdf5 #data/training.hdf5
-    keypoints_filename: /home/wasproject/Desktop/Can/DATASETS/hdf5_DATASETS/keypoint_files/RIFT2/rift2.hdf5 #tmp/RIFT2/rift2.hdf5
+    filename: data/hdf5_DATASETS/MULTIPOINT/training.hdf5 #data/training.hdf5
+    keypoints_filename: tmp/RIFT2/rift2.hdf5 #tmp/RIFT2/rift2.hdf5
     single_image: false #LOOK
     random_pairs: false #LOOK
     height: &height 256 # LOOK
     width: &width  256 # LOOK
     augmentation:
         photometric:
-            enable: false #default is true however photoetric applied phased images doesn't make sense
+            enable: false
             primitives: [
                 'random_brightness', 'random_contrast', 'additive_speckle_noise',
                 'additive_gaussian_noise', 'additive_shade', 'motion_blur' ]
@@ -24,7 +24,7 @@ dataset:
         homographic:
             enable: true #LOOK
             params:
-                corner_homography: #ADDED BY ME
+                corner_homography: #LOOK
                     enable: false #LOOK
                     params:
                         patch_size : 128
@@ -44,7 +44,7 @@ dataset:
             border_reflect: true
 
 model:
-    type: 'XPoint' #LOOK SwinMultiPoint
+    type: 'XPoint' #LOOK
     multispectral: false #LOOK
     descriptor_head: true
     descriptor_size: 256 #64
@@ -53,19 +53,19 @@ model:
     final_batchnorm: true
     reflection_pad: true
     bn_first: false
-    mixed_precision: true #?? it was false
-    homography_regression_head : #added by me
-        check : &homography_regression true #LOOK
+    mixed_precision: true #LOOK
+    homography_regression_head : #LOOK
+        check : &homography_regression True #LOOK
         type : 'RegNet' #SRHENNet, HomographyNet
     takes_pair: true #LOOK
     use_attention :
-        check : true #LOOK
-        type : 'VMamba' #'VMamba' #'ScuNet' #
+        check : True #LOOK
+        type : 'Swinv2' #'Options : 'VMamba', 'Swinv2'
         height : *height
         width : *width
         pretrained :
             check : true #LOOK
-            type_dir : /home/wasproject/Desktop/Can/XPoint/model_weights/encoder-pretrained/vmamba-imagenet/vssm_tiny_segmentation_special/ #"../xpoint-beta/model_weights/swinv2-imagenet/tiny256-w8-special" #large384 #LOOK
+            type_dir : model_weights/encoder-pretrained/swinv2-imagenet/tiny256-w8-special #model_weights/pretrained-encoder-weights/vmamba-imagenet/vssm_tiny_segmentation_special/ #"../xpoint-beta/model_weights/swinv2-imagenet/tiny256-w8-special" #large384 #LOOK
 
 
 loss:
@@ -85,9 +85,9 @@ loss:
     homography_regression_loss: #added by me
         check : *homography_regression #LOOK
         gamma : 1.0
-    detector_loss_function: 'cross_entropy'  # Options: 'cross_entropy', 'binary_cross_entropy', 'focal_loss'
-    detector_handle_multiple_keypoints: 'soft_assignment'  # Options: 'hard_assignment', 'soft_assignment', 'multi_class'
-    detector_dustbin_loss_weight: 0.025
+    detector_loss_function: 'cross_entropy'  # Options: 'cross_entropy', 'focal_loss', cross_entropy_focal_blended
+    detector_handle_multiple_keypoints: 'hard_assignment'  # Options: 'hard_assignment', 'soft_assignment'
+    detector_dustbin_loss_weight: 1
     detector_focal_loss: 
         use: False  # Whether to use Focal Loss
         alpha: 0.25 # Focal Loss alpha parameter
@@ -105,7 +105,7 @@ training:
         gamma: 0.89
     weight_decay: 0 #5e-4
     batchsize: 16 # 16
-    num_worker: 8 #4 before but 0 is good practice for ddp
+    num_worker: 8 #4
     allow_gpu: true
     use_writer: true
     output_directory: model_weights/XPoint-EXP1  #'model_weights/swinv2-tiny-w16-256 LOOK

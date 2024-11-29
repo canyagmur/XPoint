@@ -1,6 +1,6 @@
 dataset:
     type: 'ImagePairDataset'
-    filename: /home/wasproject/Desktop/Can/DATASETS/hdf5_DATASETS/dataset_files/MULTIPOINT/test.hdf5
+    filename: data/hdf5_DATASETS/MULTIPOINT/test.hdf5
     #foldername: data/location
     keypoints_filename: #tmp/labels.hdf5
     single_image: false
@@ -25,7 +25,7 @@ dataset:
         homographic:
             enable: True #LOOK
             params:
-                corner_homography: #ADDED BY ME
+                corner_homography: #LOOK
                     enable: False #LOOK
                     params:
                         patch_size : 128

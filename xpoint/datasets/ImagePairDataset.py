@@ -214,10 +214,7 @@ class ImagePairDataset(Dataset):
             raise ValueError('ImagePairDataset: The optical and thermal image must have the same shape')
 
         path_to_dataset = self.config["filename"] if self.data_is_file else self.config["foldername"]
-        if "coco" in path_to_dataset.lower():
-            optical = cv2.resize(optical, (256,256))
-            thermal = cv2.resize(thermal, (256,256)) #since keypoints are in 256x256
-            #print("Resized to 256x256 for COCO dataset, REMEMBER TO DELETE THAT!!!!!!")
+
         
 
         
@@ -420,7 +417,6 @@ class ImagePairDataset(Dataset):
             if keypoints_optical is not None:
                 keypoints_optical_map = utils.generate_keypoint_map(keypoints_optical, (h,w))
                 out['optical']['keypoints'] = torch.from_numpy(keypoints_optical_map.astype(bool))
-                #out['optical']['keypoints_coordinates'] = keypoints_optical #this causes problem in the dataloader
 
             out['thermal']['image'] = torch.from_numpy(thermal.astype(np.float32))
             out['thermal']['valid_mask'] = torch.from_numpy(valid_mask_thermal.astype(bool))
@@ -429,7 +425,6 @@ class ImagePairDataset(Dataset):
             if keypoints_thermal is not None:
                 keypoints_thermal_map = utils.generate_keypoint_map(keypoints_thermal, (h,w))
                 out['thermal']['keypoints'] = torch.from_numpy(keypoints_thermal_map.astype(bool))
-                #out['thermal']['keypoints_coordinates'] = keypoints_thermal
 
             if "hm_input" in out.keys():
                 out['hm_input'] = torch.from_numpy( out['hm_input'].astype(np.float32))
@@ -437,101 +432,6 @@ class ImagePairDataset(Dataset):
         if self.config['return_name']:
             out['name'] = self.memberslist[index]
 
-        #import cv2
-        # h,w = out["optical"]["image"].shape[1:]
-        # opt_img = np.uint8(out["optical"]["image"][0].cpu().numpy()*255)
-        # th_img = np.uint8(out["thermal"]["image"][0].cpu().numpy()*255)
-
-        # #print(out["optical"]["homography"],out["thermal"]["homography"])
-        
-        # patch_size = 64
-        # top_left_point = [0,0] #w//2-patch_size,h//2-patch_size
-        # top_right_point = [w,0] #w//2+patch_size,h//2-patch_size
-        # bottom_left_point = [0,h]#w//2-patch_size,h//2+patch_size
-        # bottom_right_point = [w,h]#w//2+patch_size,h//2+patch_size
-        # four_points = [top_left_point, top_right_point, bottom_right_point, bottom_left_point]
-
-        # perturbed_four_points = []
-        # for point in four_points:
-        #     point_hom = np.array([[point[0]], [point[1]], [1]])
-        #     point_hom_transformed = out["thermal"]["homography"].cpu().numpy() @ out["optical"]["homography"].cpu().numpy() @ point_hom
-        #     perturbed_four_points.append([int(point_hom_transformed[0]),int(point_hom_transformed[1])])
-        # #print(perturbed_four_points)
-        # #print(four_points)
-        # H_four_points = np.subtract(np.array(perturbed_four_points), np.array(four_points))
-        #print("Diff : ", np.abs(H_four_points))
-        #point_hom = np.array([[top_left], [y1], [1]])
-        #point_hom_transformed = out["thermal"]["homography"].cpu().numpy() @ out["optical"]["homography"].cpu().numpy() @ point_hom
-        # print(point_hom_transformed)
-        # print(opt_img)
-        #x2, y2 = int(point_hom_transformed[0]), int(point_hom_transformed[1])
-
-        # Draw a circle at the corresponding point in the second image
-        # for point in four_points:
-        #     cv2.circle(opt_img, (point[0], point[1]), 5, (0, 0, 255), -1)
-        # for point in perturbed_four_points:
-        #     cv2.circle(th_img, (point[0], point[1]), 5, (0, 0, 255), -1)
-        # # cv2.circle(opt_img, (x2, y2), 5, (0, 0, 255), -1)
-        # # cv2.circle(th_img, (x1, y1), 5, (0, 0, 255), -1)
-
-        # # Display the images
-        # cv2.imshow("Ground truth", opt_img)
-        # cv2.imshow("Test image", th_img)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
-        
-        #print(out['optical']['homography'])
-        #print(out['thermal']['homography'])
-
-
-
-
-
-        # from matplotlib import pyplot as plt
-        # h,w = out["optical"]["image"].shape[1:]
-        # print("H,W : ",h,w)
-        # out_thermal = cv2.cvtColor((np.clip(out['thermal']['image'].squeeze().numpy(), 0.0, 1.0) * 255.0).astype(np.uint8),cv2.COLOR_GRAY2RGB)
-        # out_optical = cv2.cvtColor((np.clip(out['optical']['image'].squeeze().numpy(), 0.0, 1.0) * 255.0).astype(np.uint8),cv2.COLOR_GRAY2RGB)
-        # #print("optical shape, thermal shape: ", out_optical.shape, out_thermal.shape)
-        # if 1: #labels_optical.shape[0] < 200 or labels_thermal.shape[0] < 200:
-        #     print("Number of keypoints optical: {}".format(keypoints_optical.shape[0]))
-        #     print("Number of keypoints thermal: {}".format(keypoints_thermal.shape[0]))
-
-        # predictions_optical = [cv2.KeyPoint(c[1], c[0], 3) for c in keypoints_optical.astype(np.float32)]
-        # predictions_thermal = [cv2.KeyPoint(c[1], c[0], 3) for c in keypoints_thermal.astype(np.float32)]
-
-        # # draw predictions and ground truth on image
-        # out_optical = cv2.drawKeypoints(out_optical,
-        #                                 predictions_optical,
-        #                                 outImage=np.array([]),
-        #                                 color=(0, 255, 0),
-        #                                 flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-        # out_thermal = cv2.drawKeypoints(out_thermal,
-        #                                 predictions_thermal,
-        #                                 outImage=np.array([]),
-        #                                 color=(0, 255, 0),
-        #                                 flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-
-        # mask_optical = np.repeat(np.expand_dims(out['optical']['valid_mask'].squeeze().numpy(), axis=2), 3, axis=2)
-        # mask_thermal = np.repeat(np.expand_dims(out['thermal']['valid_mask'].squeeze().numpy(), axis=2), 3, axis=2)
-        # fig, axs = plt.subplots(1, 2, figsize=(8,8))
-
-
-        # axs[0].imshow(out_thermal * mask_thermal)
-        # axs[0].set_title('Thermal Masked')
-
-        # axs[1].imshow(out_optical * mask_optical)
-        # axs[1].set_title('Optical Masked')
-
-        # # axs[1, 0].imshow(out_thermal)
-        # # axs[1, 0].set_title('Thermal')
-
-        # # axs[1, 1].imshow(out_optical)
-        # # axs[1, 1].set_title('Optical')
-
-        # plt.show()
-
-        
 
         return out
 

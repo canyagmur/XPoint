@@ -1,7 +1,7 @@
 dataset:
     type: 'ImagePairDataset'
-    filename: /home/wasproject/Desktop/Can/DATASETS/hdf5_DATASETS/dataset_files/MULTIPOINT/training.hdf5 #data/training.hdf5
-    #foldername: /home/wasproject/Desktop/Can/DATASETS/RedFeat/VIS_SAR/train/
+    filename: /cta/users/grad1/Desktop/Can/datasets/DATASETS/hdf5_DATASETS/dataset_files/MULTIPOINT/training.hdf5 #data/training.hdf5
+    #foldername: DATASETS/RedFeat/VIS_SAR/train/
     single_image: False
     augmentation:
         photometric:
@@ -19,7 +19,7 @@ prediction:
     topk: 0 #
     homographic_adaptation:
         num: 10
-        aggregation: 'window' #'window' #'window' #
+        aggregation: 'window' # 'window' , 'prod'
         weighted_window: True #
         window_size: 5
         erosion_radius: 3

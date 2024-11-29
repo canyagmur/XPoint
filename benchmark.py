@@ -32,7 +32,7 @@ def main():
     parser.add_argument('-tk', dest='threshold_keypoints', default=4, type=int, help='Distance below which two keypoints are considered a match')
     parser.add_argument('-th', dest='threshold_homography', default=2, type=int, help='Homography correctness threshold')
     parser.add_argument('-s', '--seed', default=0, type=int, help='Seed of the random generators')
-    parser.add_argument('-yv', '--yaml-variable', help='YAML variable config file for my bash SCRIPTS') #ADDED BY ME
+    parser.add_argument('-yv', '--yaml-variable', help='YAML variable config file for my bash SCRIPTS')
     parser.add_argument('-o', '--output_dir', default='outputs', help='output file')
 
 
@@ -60,7 +60,6 @@ def main():
         pass #for models without hmhead to work 
     
         
-    #ADDED BY ME
     if args.yaml_variable:
         with open(args.yaml_variable, 'r') as f:
             # overwrite the model params
@@ -128,7 +127,6 @@ def main():
     net.eval()
     
 
-    #important for swin
     with torch.no_grad():
         print(args.output_dir)
         print("MODEL : ",args.model_dir)
@@ -139,13 +137,12 @@ def main():
         keypoint_detection_threshold =[config["prediction"]["detection_threshold"]] #[0.001]
         print("Keypoint detection threshold : ",keypoint_detection_threshold)
         
-        #[133, 167, 89, 63, 22] vedai 512 worst
-        #[160, 182, 184, 162, 65, 24, 198, 149, 186, 185] vedai 512 best
+
 
         if not os.path.isdir(args.output_dir):
             os.makedirs(args.output_dir)
 
-        args.index = list(np.random.randint(0,len(loader_dataset),size=5)) #[133, 167, 89, 63, 22] #[2450 ,1915,  878 , 406 , 875 ,1623 ,2446, 3052  ,  8  , 12]#1,11,111,1111,2222,3333,1234,2345,3210]
+        args.index = list(np.random.randint(0,len(loader_dataset),size=5)) 
         print("Experimenting on :", len(args.index)," random indices.")
         print("First 10 index : ",args.index[:10])
 
@@ -214,14 +211,7 @@ def main():
                 import json
                 import copy
 
-                # mytarget_dir = os.path.join(args.model_dir, 'descriptor_evaluation',"results")
-                # if not os.path.isdir(mytarget_dir):
-
-                #     os.makedirs(mytarget_dir)
                 keys_to_copy = ['nn_map', 'm_score']
-                # for key,value in results_descriptor.items():
-                #     for key2,value2 in value.items():
-                #         print(key,key2)
                 
                 myresults = {}
                 descriptor_written_results = {"th_kp_{}".format(th_kp) :{k: copy.deepcopy(results_descriptor[th_kp][k]) for k in keys_to_copy if k in results_descriptor[th_kp]} for th_kp in results_descriptor.keys()}
@@ -248,48 +238,12 @@ def main():
 
 
                 # Save dictionary to txt file
-
-                #print(results_descriptor['matching_kp_numbers'])
-                #folder_path = mytarget_dir  
-                #file_name = os.path.split(args.model_dir.strip("/"))[-1] + '_' + args.version+".txt"
                 filename = "detection_threshold_{}".format(detection_threshold)+ ".txt"
-                #unique_file_name =utils.get_new_filename(args.output_dir, file_name)
-                #myresults_dir = os.path.join(mytarget_dir,unique_file_name)
                 myoutput_dir = os.path.join(folder_path,filename)
 
 
-
-
-                # if args.plot:
-                #     #this is for descriptor metrics
-                #     plt.figure()
-                #     plt.title('PR curve')
-                #     plt.xlabel('precision')
-                #     plt.ylabel('recall')
-                #     plt.plot(results_descriptor['recall_optical'], results_descriptor['precision_optical'], 'r')
-                #     plt.plot(results_descriptor['recall_thermal'], results_descriptor['precision_thermal'], 'g')
-                #     plt.legend(['optical', 'thermal'])
-
-                #     # plt.figure()
-                #     # plt.title('Optical M-score')
-                #     # plt.hist(results_descriptor['m_score_optical'], 50)
-
-                #     # plt.figure()
-                #     # plt.title('Thermal M-score')
-                #     # plt.hist(results_descriptor['m_score_thermal'], 50)
-
-                #     # plt.figure()
-                #     # plt.title('Warp point distance error')
-                #     # plt.hist(results_descriptor['pts_dist'], 50)
-
-                #     plt.show()
-
-                #descriptor END
-
                 for key,value in  mean_time_dict_sec_HZ.items():
                     myresults[key] = value
-                # myresults['matching_kp_numbers'] = results_descriptor['matching_kp_numbers']
-                # myresults['pts_dist'] = results_descriptor['pts_dist']
                 with open(myoutput_dir, 'w') as file:
                     file.write(json.dumps(myresults, indent=4))
                 print("-----done : ",myoutput_dir,"\n")

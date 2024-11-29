@@ -1831,7 +1831,7 @@ if __name__ == "__main__":
         os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
         parser = argparse.ArgumentParser('Swin Transformer training and evaluation script', add_help=False)
-        parser.add_argument('--cfg', type=str, default="/home/wasproject/Desktop/Can/XPoint/model_weights/encoder-pretrained/vmamba-imagenet/vssm_tiny_segmentation/vssm_tiny.yaml", metavar="FILE", help='path to config file', )
+        parser.add_argument('--cfg', type=str, default="model_weights/encoder-pretrained/vmamba-imagenet/vssm_tiny_segmentation/vssm_tiny.yaml", metavar="FILE", help='path to config file', )
         parser.add_argument(
             "--opts",
             help="Modify config options by adding 'KEY VALUE' pairs. ",

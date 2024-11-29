@@ -14,7 +14,7 @@ import xpoint.utils as utils
 
 from pick_GPU import pickGPU
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "2" #str(pickGPU())
+os.environ["CUDA_VISIBLE_DEVICES"] = "0" #str(pickGPU())
 
 def synchronize():
     if torch.cuda.is_available():
@@ -176,7 +176,6 @@ def main():
         # get the sample and move it to the right device
         synchronize()
         t_start = time.time()
-        #args.index = np.argmax(results["matching_kp_numbers"]) #LOOKKKKKKK
         data = dataset[args.index]
         data = utils.data_to_device(data, device)
         data = utils.data_unsqueeze(data, 0)
