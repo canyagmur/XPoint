@@ -439,7 +439,9 @@ class XPoint(nn.Module):
                     print("Depths : ",mamba_config.MODEL.VSSM.DEPTHS)
                     print("Using pretrained VMAMBA config : ", self.config['use_attention']['pretrained']["yaml_file"])
                 else:
-                    mypath = "model_weights/encoder-pretrained/vmamba-imagenet/vssm_tiny_segmentation_special/vssm_tiny.yaml" 
+                    import os
+                    mypath = self.config['use_attention']['pretrained']['type_dir']
+                    mypath = os.path.join(mypath, [f for f in os.listdir(mypath) if f.endswith('.yaml')][0]) 
                     mamba_config = get_config(mypath)
                     self.n_channels[4] = mamba_config.MODEL.VSSM.EMBED_DIM // 2
                     encoder = build_vssm_model(mamba_config)
