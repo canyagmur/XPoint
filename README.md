@@ -1,4 +1,3 @@
-
 <p align="center">
   <h1 align="center"><ins>XPoint</ins> <br>A Self-Supervised Visual-State-Space based Architecture for Multispectral Image Registration</h1>
   <p align="center">
@@ -23,7 +22,7 @@
 # XPoint
 This is a PyTorch implementation of "XPoint: A Self-Supervised Visual-State-Space based Architecture for Multispectral Image Registration"
 
-## Installation
+# Installation
 This software requires Python 3.8 or higher (Tested on 3.11.0).
 
 First create a conda/virtual environment and activate it:
@@ -56,8 +55,8 @@ pip install -e . --user
 ```
 (You can remove the `--user` flag if operating in a virtual environment) -->
 
-## Dataset
-### Multispectral Image Pair Dataset
+# Dataset
+## Multispectral Image Pair Dataset
 The dataset is hosted on the [Autonomous Systems Lab dataset website](https://projects.asl.ethz.ch/datasets/doku.php?id=corl2020-multipoint), which also offers basic information about the data.
 
 The dataset can be downloaded by running (from the xpoint directory):
@@ -67,10 +66,10 @@ python download_multipoint_data.py
 A different target directory can be specified with the `-d` flag.
 You can force overwrite existing files by setting the -f flag. Please note that the dataset files are quite large (over 36 GB total), so the download process may take some time.
 
-### VEDAI Dataset
+## VEDAI Dataset
 The VEDAI dataset can be downloaded from the [official website](https://downloads.greyc.fr/vedai/).
 
-### VIS-NIR, VIS-IR and VIS-SAR Datasets
+## VIS-NIR, VIS-IR and VIS-SAR Datasets
 These datasets are proposed by [RedFeaT](https://github.com/ACuOoOoO/ReDFeat). We uploaded datasets to the [drive link](https://drive.google.com/drive/folders/1M0XXW1CwirXXtgFJDc7day3YWQi-X2Ot?usp=sharing). You can download the "nir_ir_sar_datasets.zip" file from the drive link.
 
 ## Dataset Structure
@@ -113,21 +112,67 @@ structure for other datasets, such as VEDAI, VIS-NIR, VIS-IR, and VIS-SAR.
 
 
 
+---
 
+# Pre-trained Models
+Pre-trained models for XPoint can be downloaded from the [drive link](https://drive.google.com/drive/folders/1M0XXW1CwirXXtgFJDc7day3YWQi-X2Ot?usp=sharing). The models are stored in the "ALL_BESTS" folder.
 
-## Pre-trained Models
-Pre-trained models for XPoint can be downloaded from the [drive link](https://drive.google.com/drive/folders/1M0XXW1CwirXXtgFJDc7day3YWQi-X2Ot?usp=sharing). The pre-trained models are under "ALL_BESTS" folder and include "MP","VEDAI", "NIR", "IR" and "SAR" for respective datasets models. Download those models and store them in the `model_weights` directory.
+### Model Versions
+- `MP`: Base model trained on Multipoint dataset (visible-thermal).
+- `VEDAI`: Fine-tuned for VEDAI dataset.
+- `NIR`: Fine-tuned for visible-NIR.
+- `IR`: Fine-tuned for visible-IR.
+- `SAR`: Fine-tuned for visible-SAR.
 
-The base model is "MP" and it is trained on the multispectral image pair dataset with a resolution of 256x256. Then, other models are finetuned on their respective datasets from the base model.
+---
 
 <!-- ### Ground truth keypoints file
 The ground truth keypoints file for the multispectral image pair dataset can be downloaded from the same link [drive link](https://drive.google.com/drive/folders/1M0XXW1CwirXXtgFJDc7day3YWQi-X2Ot?usp=sharing) under "xpoint_labels" folder.The ground truth keypoints file can be used to train your own model. -->
 
-## Usage
-In the following section the scripts to train and visualize the results of XPoint are explained. For each script, additional help on the input paramaters and flags can be found using the `-h` flag (e.g. `python show_keypoints.py -h`).
+## Demo Usage
+We provide a demo script to test the model on arbitrary visible-spectrum and other-spectrum image pairs (e.g., thermal, NIR, etc.). The script generates detailed visualizations and comprehensive metrics for cross-spectral matching.
 
 
-#### Benchmark on Predicting Keypoints and Homography
+### Example with Sample Data
+
+```bash
+python demo.py \
+    --visible /path/to/visiblespectrum/image.png \
+    --other /path/to/otherspectrum/image.png \
+    --config configs/cipdp.yaml \
+    --model-dir model_weights/ALL_BESTS \
+    --version IR \
+    --output demo_results \
+    --plot
+```
+
+### Arguments
+- `--visible`: Path to the visible spectrum image
+- `--other`: Path to the other spectrum image (thermal, NIR, etc.)
+- `--config`: Path to the configuration file (default: configs/cipdp.yaml)
+- `--model-dir`: Directory containing model weights
+- `--version`: Model version/name (e.g., 'MP', 'IR', 'NIR', 'SAR')
+- `--output`: Output directory for results (will be created if it doesn't exist)
+- `--plot`: Enable detailed visualization and metrics (optional)
+
+
+### Model Versions
+Different model versions are available for specific spectrum pairs:
+- `MP`: Base model trained on Multipoint dataset (visible-thermal)
+- `VEDAI`: Fine-tuned for VEDAI dataset
+- `NIR`: Fine-tuned for visible-NIR
+- `IR`: Fine-tuned for visible-IR
+- `SAR`: Fine-tuned for visible-SAR
+
+Choose the appropriate version based on your spectrum pair for optimal results.
+
+
+
+
+
+
+
+# Benchmark
 The performance of the trained XPoint can be evaluated by executing the `benchmark.py` script.
 
 Example benchmark on multipoint's dataset:
@@ -138,16 +183,16 @@ python benchmark.py -y configs/cipdp.yaml -m model_weights/ALL_BESTS -v MP -e -p
 
 Here the '-y' flag specifies yaml file ,the `-m` flag specifies the model weights, the `-v` flag the version of the model, the `-e` flag computes the metrics for the whole dataset, and the `-p` flag plots the results of some samples. The yaml file specifies the dataset and the model parameters.
 
-#### Individually Predicting Repeatibility Score
+## Individually Predicting Repeatibility Score
 Predicting only keypoints can be done executing the `predict_keypoints.py` script.
 The results are plotted by adding the `-p` flags and the metrics for the whole dataset are computed by adding the `-e` flag.
 
-#### Predicting the Matching and Homography Estimation Score
+## Predicting the Matching and Homography Estimation Score
 Predicting the alignment of an image pair can be done using the `predict_align_image_pair.py` script.
 The resulting keypoints and matches can be visualized by adding the `-p` flag.
 The metrics over the full dataset are computed when adding the `-e` flag.
 
-#### Generating Keypoint Labels
+## Generating Keypoint Labels
 Keypoint labels for a given set of image pairs can be generated using:
 
 ```
@@ -160,7 +205,7 @@ python export_keypoints.py -y configs/custom_export_keypoints.yaml -o tmp/labels
 ```
 
 
-#### Visualizing Keypoint Labels
+## Visualizing Keypoint Labels
 The generated keypoint labels can be inspected by executing the `show_keypoints.py` script:
 
 ```
@@ -170,7 +215,7 @@ python show_keypoints.py -d data/MULTIPOINT/training.hdf5 -k tmp/labels.hdf5 -n 
 The `-d` flag specifies the dataset file, the `-k` flag the labels file, and the `-n` flag the index of the sample which is shown.
 
 
-#### Visualizing Samples from Datasets
+## Visualizing Samples from Datasets
 By executing the following command:
 ```
 python show_image_pair_sample.py -i tmp/test.hdf5 -n 100
@@ -178,7 +223,7 @@ python show_image_pair_sample.py -i tmp/test.hdf5 -n 100
 
 the 100th image pair of the `tmp/test.hdf5` dataset is shown.
 
-#### Training XPoint
+# Training
 XPoint can be trained by executing the `train.py` script. All that script requires is a path to a yaml file with the training parameters:
 
 ```
@@ -188,6 +233,8 @@ python train.py -y configs/cmt.yaml
 The hyperparameter for the training, e.g. learning rate, model parameters, can be modified in the yaml file.
 
 If you want to use pretrained encoder weights, e.g VMamba, SwinTransformerV2, you can set the `pretrained` parameter in the yaml file. The pretrained weights and their configurations can be downloaded from the [drive link](https://drive.google.com/drive/folders/1M0XXW1CwirXXtgFJDc7day3YWQi-X2Ot?usp=sharing). 
+
+
 
 
 ## Citing

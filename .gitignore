@@ -37,8 +37,6 @@ tmp
 *.pyc
 *.lsf
 *lsf*
-*.txt
 data/*
 
-!requirements.txt
 !.gitignore
